@@ -10,11 +10,15 @@ def input_results(df, date, ws, wb):
                 result = input(f"Did you {stat} (y/n)? (press enter to skip):")
         else:
             result = input(f"Please enter your {stat} for {date} (or press enter to skip): ")
+            result = int(result)
         update_cell(ws,df, stat, date, result)
 
 # This function updates the specified cell in the Excel worksheet with the user's input.
 def update_cell(ws,df, stat, date, result):
-    row_index = df.index[df['Date'] == date].tolist()[0] + 2 # +2 to account for header and 0-indexing
+    find_cell(ws,df,stat,date).value = result
+
+def find_cell(ws, df, stat, date):
+    row_index = df.index[df['Date'] == date].tolist()[0] + 2  # +2 to account for header and 0-indexing
     col_index = df.columns.get_loc(stat) + 1  # +1 because openpyxl is 1-indexed
-    ws.cell(row=row_index, column=col_index).value = result
+    return ws.cell(row=row_index, column=col_index)
     
