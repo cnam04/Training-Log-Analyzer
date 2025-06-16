@@ -9,7 +9,6 @@ def main():
     df = pd.read_excel(FILE_PATH)
     wb = load_workbook(FILE_PATH, data_only=True)  # Load workbook with formulas evaluated
     ws = wb["Plan"]
-    print(wb.sheetnames)
     current_date = ask_for_date(df)
     give_workout_info(current_date, df, ws, wb)
     input_results(df, current_date, ws, wb)

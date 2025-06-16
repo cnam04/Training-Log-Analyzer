@@ -18,11 +18,11 @@ class Training_day:
         self.workouts = [Workout() for _ in range(3)]
         # instantiate each workout object with the corresponding data from the Excel sheet
         for i in range(0, len(workout_columns), 5):
-            name = find_cell(self.ws, self.df, workout_columns[i], self.date)  # Initialize each workout column to None
-            sets = find_cell(self.ws, self.df, workout_columns[i+1], self.date)
-            reps = find_cell(self.ws, self.df, workout_columns[i+2], self.date)
-            weight = find_cell(self.ws, self.df, workout_columns[i+3], self.date)
-            RPE = find_cell(self.ws, self.df, workout_columns[i+4], self.date)
+            name = find_cell(self.ws, self.df, workout_columns[i], self.date).value
+            sets = find_cell(self.ws, self.df, workout_columns[i+1], self.date).value
+            reps = find_cell(self.ws, self.df, workout_columns[i+2], self.date).value
+            weight = find_cell(self.ws, self.df, workout_columns[i+3], self.date).value
+            RPE = find_cell(self.ws, self.df, workout_columns[i+4], self.date).value
             self.workouts[i//5] = Workout(self.day, name, sets, reps, weight, RPE, self.load_cycle_block, self.wb, self.df)
 
     def load_cycle_info(self):

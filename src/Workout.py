@@ -19,22 +19,22 @@ class Workout:
             sets = 3
             reps = 5  
             rpe = 6.5
-            weight = prev_weight if prev_weight is not None else one_RM * 0.7
+            weight = (prev_weight +2.5) if prev_weight is not None else round(one_RM * 0.7)
         elif self.load_cycle == 2:
             sets = 3  
             reps = 3  # I want more power focus
             rpe = 8.5 
-            weight = prev_weight if prev_weight is not None else one_RM * 0.7
+            weight = (prev_weight+2.5) if prev_weight is not None else round(one_RM * 0.85)
         elif self.load_cycle == 3:
             sets = 3
             reps = 5 
             rpe = 7.5 
-            weight = prev_weight if prev_weight is not None else one_RM * 0.7
+            weight = (prev_weight +2.5) if prev_weight is not None else round(one_RM * 0.7)
         elif self.load_cycle == 4:
             sets = 2 
             reps = 5 
             rpe = 5 
-            weight = prev_weight if prev_weight is not None else one_RM * 0.7
+            weight = prev_weight if prev_weight is not None else round(one_RM * 0.7)
         
         # return a string with the recommended workout details
         recommendation = f"Recommendation for {self.name}:\n" \
@@ -44,25 +44,34 @@ class Workout:
     def get_1RM(self, wb):
         benchmarks = wb[wb.sheetnames[1]]
         for row in benchmarks.iter_rows(min_row=2):
-            if row[0].value == self.name: 
+            if row[0].value.strip() == self.name.strip(): 
                 return row[3].value # this is the 1RM value in the benchmarks sheet
     
     # Retrieves the weight from the previous workout in the same load cycle.
     #  gets the weight from that workout the most recent time the load cycle value was equal to the current load cycle value
-    def get_previous_weight(self):
-        current_day = self.day
-        #TODO: Fix this to work with the excel sheet. Doesn't account for 3 workout columns.
-        filtered_prev_workouts = self.df[ #create a new dataframe containing rows where: load cycle is equal to the current load cycle, day is less than the current day, workount name is equal to the current workout name
+    def get_previous_weight(self, day=None):
+        current_day = day if day is not None else self.day
+        workout_cols = ['Workout 1', 'Workout 2', 'Workout 3']
+        weight_cols = ['Weight W1', 'Weight W2', 'Weight W3']
+        
+        filtered_prev_workouts = self.df[ # Create a filtered DataFrame with all previous workouts of the same type in the same load cycle
             (self.df['Load Cycle'] == self.load_cycle) &
             (self.df['Day'] < current_day) &
-            (self.df['Workout 1'] or self.df['Workout 2'] or self.df['Workout 3']  == self.name)
-        ]
-        filtered_prev_workouts = filtered_prev_workouts.sort_values(by='Day', ascending=False)  # Sort by day in descending order so you can pop the most recent one off the top
-        weight_column_index = filtered_prev_workouts.columns.get_loc(self.name) + 3 # this is bc each rows contains weights for each workout. prob should've structured my data differently...
-        prev_weight = filtered_prev_workouts.iloc[0, weight_column_index] if not filtered_prev_workouts.empty else None
-
-        return prev_weight
-        #  weight column is 3 columns to the right of the workout name column
+            (self.df[workout_cols].eq(self.name).any(axis=1))
+        ].sort_values(by='Day', ascending=False)
+        
+        if filtered_prev_workouts.empty:
+            return None
+        
+        most_recent_row = filtered_prev_workouts.iloc[0]
+        for i, col in enumerate(workout_cols): # find the most recent workout
+            if most_recent_row[col] == self.name:
+                if most_recent_row[weight_cols[i]] == 0:
+                    # Look further back
+                    return self.get_previous_weight(day=most_recent_row['Day'])
+                else:
+                    return most_recent_row[weight_cols[i]]
+        return None
         
            
            
