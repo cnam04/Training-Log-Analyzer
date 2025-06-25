@@ -5,10 +5,9 @@ def input_results(df, date, ws, wb):
     
     # Allow user to skip inputting results
     result = input("Would you like to input your results? (y/n): ")
-    while result not in ('y', 'n'):
+    while result not in ('y', 'n', 'Y', 'N'):
         result = input("Would you like to input your results? (y/n): ")
-        result = result.lower()
-    if result == 'n':
+    if result.lower() == 'n':
         return
     
     for stat in sets_reps_rpe:
@@ -19,7 +18,7 @@ def input_results(df, date, ws, wb):
                 result = input(f"Did you {stat} (y/n)? (press enter to skip):")
         else:
             result = input(f"Please enter your {stat} for {date} (or press enter to skip): ")
-            result = int(result)
+            result = int(result) if result else None
         update_cell(ws,df, stat, date, result)
 
 # This function updates the specified cell in the Excel worksheet with the user's input.

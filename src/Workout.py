@@ -1,5 +1,4 @@
-#TODO: Fix problem in get_previous_weight 
-#TODO: Add graphical representations
+
 class Workout:   
     def __init__(self, day=None, name=None, sets=None, reps=None, weight=None, RPE=None, load_cycle=None, wb=None, df=None):
         self.day = day
@@ -53,6 +52,7 @@ class Workout:
         current_day = day if day is not None else self.day
         workout_cols = ['Workout 1', 'Workout 2', 'Workout 3']
         weight_cols = ['Weight W1', 'Weight W2', 'Weight W3']
+        rpe_cols = ['RPE W1', 'RPE W2', 'RPE W3']
         
         filtered_prev_workouts = self.df[ # Create a filtered DataFrame with all previous workouts of the same type in the same load cycle
             (self.df['Load Cycle'] == self.load_cycle) &
@@ -66,13 +66,16 @@ class Workout:
         most_recent_row = filtered_prev_workouts.iloc[0]
         for i, col in enumerate(workout_cols): # find the most recent workout
             if most_recent_row[col] == self.name:
+                # If a workout was skipped, find the next most recent workout
                 if most_recent_row[weight_cols[i]] == 0:
-                    # Look further back
                     return self.get_previous_weight(day=most_recent_row['Day'])
                 else:
-                    return most_recent_row[weight_cols[i]]
+                    if rpe_cols[i] >= 9:
+                        return most_recent_row[weight_cols[i]] -2.5 # If the RPE is 9 or higher, reduce the weight by 2.5 lbs since its too heavy
+                    else:
+                        return most_recent_row[weight_cols[i]]
         return None
-        
+
            
            
            
