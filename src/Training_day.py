@@ -1,5 +1,6 @@
 from src.input_module import find_cell
 from src.Workout import Workout
+from src.graph_maker import display_graphs
 class Training_day:
     def __init__(self, date, df, ws, wb):
         self.ws = ws
@@ -43,6 +44,10 @@ class Training_day:
 
         # Give info about the current point in the load cycle
         print(self.load_cycle_info())
+        
+        # fill this out: 
+         # display_graphs(self.wb, self.df, self.date)
+       
         
         # Display each workout's recommendation
         for workout in self.workouts:
