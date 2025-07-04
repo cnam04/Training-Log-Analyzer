@@ -7,7 +7,7 @@ def graph_maker(df, date):
     # Prepare data for graphs
     graph_data = prepare_graph_data(df, date)
     
-    graph_paths = ['weekly_load_trend.png', '1RM_progression.png', 'actual_RPE_vs_target.png', 'weekly_consistency.png', 'load_cycle_summary.png']
+    graph_paths = ['load_trend.png', '1RM_progression.png', 'actual_RPE_vs_target.png', 'weekly_consistency.png', 'load_cycle_summary.png']
 
     # Create graphs
     display_graphs(graph_data, graph_paths, date)
@@ -23,7 +23,7 @@ def save_graphs(graph_paths, output_path):
 # Instantiate graph objects and call their methods to plot and save graphs
 def display_graphs(graph_data,graph_paths,date):
     graph_classes = [
-        (WeeklyLoadTrendGraph, 'weekly_load_trend'),
+        (LoadTrendGraph, 'load_trend'),
         (MaxProgressionGraph, '1RM_progression'),
         (RPEvsTargetGraph, 'actual_RPE_vs_target'),
         (WeeklyConsistencyGraph, 'weekly_consistency'),
@@ -44,7 +44,7 @@ def prepare_graph_data(df, date):
 
     
     return {
-        'weekly_load_trend': g1,
+        'load_trend': g1,
         '1RM_progression': g2,
         'actual_RPE_vs_target': g3,
         'weekly_consistency': g4,
