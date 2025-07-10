@@ -17,23 +17,23 @@ class Workout:
         if self.load_cycle == 1:
             sets = 3
             reps = 5  
-            rpe = 6.5
-            weight = (prev_weight +2.5) if prev_weight is not None else round(one_RM * 0.7)
+            rpe = 7
+            weight = (prev_weight +2.5) if prev_weight is not None else round(one_RM * 0.65)
         elif self.load_cycle == 2:
             sets = 3  
             reps = 3  # I want more power focus
-            rpe = 8.5 
+            rpe = 9 
             weight = (prev_weight+2.5) if prev_weight is not None else round(one_RM * 0.85)
         elif self.load_cycle == 3:
             sets = 3
             reps = 5 
-            rpe = 7.5 
+            rpe = 8 
             weight = (prev_weight +2.5) if prev_weight is not None else round(one_RM * 0.7)
         elif self.load_cycle == 4:
             sets = 2 
             reps = 5 
             rpe = 5 
-            weight = prev_weight if prev_weight is not None else round(one_RM * 0.7)
+            weight = prev_weight if prev_weight is not None else round(one_RM * 0.6)
         
         # return a string with the recommended workout details
         recommendation = f"Recommendation for {self.name}:\n" \
