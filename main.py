@@ -7,10 +7,11 @@ from src.workout_logic import give_workout_info
 FILE_PATH = '/Users/cole/Documents/OneDrive - State University of New York at New Paltz/Climbing Training Log Summer.xlsx'
 def main():
     df = pd.read_excel(FILE_PATH)
+    benchmark_df = pd.read_excel(FILE_PATH, sheet_name='Benchmarks')
     wb = load_workbook(FILE_PATH, data_only=True)  # Load workbook with formulas evaluated
     ws = wb["Plan"]
     current_date = ask_for_date(df)
-    give_workout_info(current_date, df, ws, wb)
+    give_workout_info(current_date, df, ws, wb, benchmark_df)
     input_results(df, current_date, ws, wb)
 #   TODO: generate_report(df)
     

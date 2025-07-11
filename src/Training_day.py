@@ -2,11 +2,12 @@ from src.input_module import find_cell
 from src.Workout import Workout
 from src.graph_maker import display_graphs
 class Training_day:
-    def __init__(self, date, df, ws, wb):
+    def __init__(self, date, df, ws, wb, benchmark_df):
         self.ws = ws
         self.wb = wb
         self.date = date
         self.df = df
+        self.benchmark_df = benchmark_df
         self.load_cycle_block = find_cell(self.ws, self.df, 'Load Cycle', self.date).value
         self.day = find_cell(self.ws, self.df, 'Day', self.date).value
         self.initialize_workouts()
@@ -46,7 +47,7 @@ class Training_day:
         print(self.load_cycle_info())
         
         # fill this out: 
-         # display_graphs(self.wb, self.df, self.date)
+         # display_graphs(self.wb, self.df, self.date, self.benchmark_df)
        
         
         # Display each workout's recommendation
