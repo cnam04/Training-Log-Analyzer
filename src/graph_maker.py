@@ -14,9 +14,7 @@ def graph_maker(df, date, wb, benchmark_df):
     
     plot_graphs(graphs)
 
-
     save_graphs(graph_paths,'/Users/cole/Desktop/ClimbingWorkoutAnalyzer/src/graphs')
-
 
 # TODO: Save graphs to specified output path
 def save_graphs(graph_paths, output_path):
@@ -43,13 +41,12 @@ def plot_graphs(graphs):
     for graph in graphs:
         graph.plot_graph()
 
-
 # TODO: Transform base dataframe into data needed for each graph
 def prepare_graph_data(df, date, wb, benchmark_df):
     #add logic to prepare data for each graph
     g1 = load_trend_data(df, date, wb)
     g2 = max_progression_data(df, date, wb, benchmark_df)
-    
+    g3 = actual_RPE_vs_target_data(df, date, wb)
     return {
         'load_trend': g1,
         '1RM_progression': g2,
@@ -62,22 +59,17 @@ def load_trend_data(df, date, wb, benchmark_df):
 # Actual load: 
     # get 1RM data for exercises on that day
         # get the type
-    current_type = df[df['Date'] == date]['Type'].iloc[0]
+    current_type = get_current_type(df, date)
     # add a column in g1_data that contains the %1RM for each exercise
         # add logic to cut down dataframe based on type
         #  (type column is for type of climbing, but the exercises correspond so this is the easiest way to do it)
     g1_data = df[df['Type'] == current_type]
-    
-
     # add a new column with actual load for each exercise
     # actual load = sets * reps * %1RM
     #%1RM = Weight / 1RM * 100
     g1_data['Workout 1 Actual Load'] = g1_data['Sets W1'] * g1_data['Reps W1'] * (g1_data['Weight W1'] / benchmark_df[benchmark_df['Type'] == current_type].iloc[0][3] * 100)
     g1_data['Workout 2 Actual Load'] = g1_data['Sets W2'] * g1_data['Reps W2'] * (g1_data['Weight W2'] / benchmark_df[benchmark_df['Type'] == current_type].iloc[1][3] * 100)
     g1_data['Workout 3 Actual Load'] = g1_data['Sets W3'] * g1_data['Reps W3'] * (g1_data['Weight W3'] / benchmark_df[benchmark_df['Type'] == current_type].iloc[2][3] * 100)
-
-    
-    
 #Expected load:
     # give each load cycle block value a respective load value
     # assign expected load values to each workout based on the load cycle block
@@ -102,7 +94,6 @@ def load_trend_data(df, date, wb, benchmark_df):
     # return df including the day, actual load, expected load
 
 def max_progression_data(df, date, wb, benchmark_df):
-    # TODO: find a way to get all 9
     # find previous benchmark 1RMs for each exercise
     g2_data = benchmark_df[['Workout','Estimated 1RM']]
     g2_data = g2_data.rename(columns={'Estimated 1RM': 'Previous 1RM'})
@@ -130,5 +121,33 @@ def max_progression_data(df, date, wb, benchmark_df):
 
     return g2_data
 
+def actual_RPE_vs_target_data(df, date, wb):
+    # sort actual vs target RPE for each workout
+    current_type = get_current_type(df, date)
+    g3_data = df[df['Type'] == current_type][['Day', 'Workout 1', 'Workout 2', 'Workout 3','RPE W1', 'RPE W2', 'RPE W3', 'Load Cycle']]
+    g3_data = g3_data.rename(columns={
+        'RPE W1': 'Actual RPE W1',
+        'RPE W2': 'Actual RPE W2',
+        'RPE W3': 'Actual RPE W3',
+        # this just renames the columns to the actual names of the workouts on those days
+        #  this will be used in the legend
+        'Workout 1': g3_data[g3_data['Day'] == date]['Workout 1'].iloc[0],
+        'Workout 2': g3_data[g3_data['Day'] == date]['Workout 2'].iloc[0],
+        'Workout 3': g3_data[g3_data['Day'] == date]['Workout 3'].iloc[0]
+    })
+    load_cycle_RPE_expected = {
+        1: 7,
+        2: 9,
+        3: 8,
+        4: 6
+    }
+    g3_data['Expected RPE W1']= g3_data['Load Cycle'].map(load_cycle_RPE_expected)
+    g3_data['Expected RPE W2']= g3_data['Load Cycle'].map(load_cycle_RPE_expected)
+    g3_data['Expected RPE W3']= g3_data['Load Cycle'].map(load_cycle_RPE_expected)
+
+    return g3_data
     
 
+def get_current_type(df, date):
+    # get the type of climbing for the current date
+    return df[df['Date'] == date]['Type'].iloc[0]

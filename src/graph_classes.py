@@ -62,11 +62,11 @@ class MaxProgressionGraph(BaseGraph):
 class RPEvsTargetGraph(BaseGraph):
     # Goal: Track how my actual RPE compares to my target RPE
         # timeframe = all time
-        # lines: 2 for each exercise, one for actual RPE, one for target RPE
-            # x axis = date
-                # major ticks = every day
+        # dumbell dot plot, with lines connecting the actual RPE to the target RPE
+            # x axis = day
             # y axis = RPE
-                # major ticks = every 0.5 RPE
+                # major ticks = 1 RPe
+                # minor ticks = 0.5 RPE
         # title = "Actual vs Target RPE"
 
     # data needed:
