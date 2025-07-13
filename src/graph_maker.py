@@ -146,8 +146,32 @@ def actual_RPE_vs_target_data(df, date, wb):
     g3_data['Expected RPE W3']= g3_data['Load Cycle'].map(load_cycle_RPE_expected)
 
     return g3_data
+
+# count up weekly number of partially, missed, completed per week
+def get_weekly_consistency_data(df, date):
     
+    
+    counted_columns = ['Sets W1', 'Reps W1', 'Weight W1',
+                       'Sets W2', 'Reps W2', 'Weight W2',
+                       'Sets W3', 'Reps W3', 'Weight W3']
+    g4_data = df[counted_columns + ['Week', 'Date']].copy()
+    g4_data = g4_data[g4_data['Date'] <= date]
+    g4_data[counted_columns] = g4_data[counted_columns].fillna(0)  # replace NaN with 0 for easier counting
+   
+    # create columns for missed, partially completed, and completed workouts
+    #  evaluate for each row
+    g4_data['missed_workouts'] = g4_data[counted_columns].eq(0).all(axis=1)
+    g4_data['partially_completed_workouts'] = g4_data[counted_columns].eq(0).any(axis=1)
+    g4_data['completed_workouts'] = g4_data[counted_columns].ne(0).all(axis=1)
+    
+    # then just group by week and sum the columns
+    g4_data = g4_data[['Week', 'missed_workouts', 'partially_completed_workouts', 'completed_workouts']].groupby('Week').sum().reset_index()
+
+    return g4_data
+    
+        
+
+
 
 def get_current_type(df, date):
-    # get the type of climbing for the current date
     return df[df['Date'] == date]['Type'].iloc[0]
