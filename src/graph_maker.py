@@ -47,6 +47,8 @@ def prepare_graph_data(df, date, wb, benchmark_df):
     g1 = load_trend_data(df, date, wb)
     g2 = max_progression_data(df, date, wb, benchmark_df)
     g3 = actual_RPE_vs_target_data(df, date, wb)
+    g4 = get_weekly_consistency_data(df, date)
+    g5 = get_load_cycle_summary_data(df, date)
     return {
         'load_trend': g1,
         '1RM_progression': g2,
@@ -149,11 +151,10 @@ def actual_RPE_vs_target_data(df, date, wb):
 
 # count up weekly number of partially, missed, completed per week
 def get_weekly_consistency_data(df, date):
-    
-    
     counted_columns = ['Sets W1', 'Reps W1', 'Weight W1',
                        'Sets W2', 'Reps W2', 'Weight W2',
                        'Sets W3', 'Reps W3', 'Weight W3']
+    # clean up the data a bit
     g4_data = df[counted_columns + ['Week', 'Date']].copy()
     g4_data = g4_data[g4_data['Date'] <= date]
     g4_data[counted_columns] = g4_data[counted_columns].fillna(0)  # replace NaN with 0 for easier counting
@@ -169,9 +170,10 @@ def get_weekly_consistency_data(df, date):
 
     return g4_data
     
-        
-
-
+def get_load_cycle_summary_data(df, date):
+    current_load_cycle = df[df['Date'] == date]['Load Cycle'].iloc[0]
+    # you only need one data point because the graph is static
+    return current_load_cycle
 
 def get_current_type(df, date):
     return df[df['Date'] == date]['Type'].iloc[0]
