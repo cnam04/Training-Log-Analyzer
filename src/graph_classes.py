@@ -3,12 +3,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Base class that contains common functionality for all graph types
+# I've decided not to just use df.plot here so that I can have extra control over the graph features
 class BaseGraph(ABC):
     def __init__(self, data, path, date):
         self.data = data
         self.date = date
         self.path = path
-        self.fig, self.ax = plt.subplots()
+        self.fig, self.ax = plt.subplots()  
     
     # This will contain the specific plotting logic for each graph type
     @abstractmethod
@@ -19,8 +20,9 @@ class BaseGraph(ABC):
         self.ax.set_title(title)
         self.ax.set_xlabel(xlabel)
         self.ax.set_ylabel(ylabel)
-        self.fig.savefig(self.path)
+        self.fig.savefig('/Users/cole/Desktop/ClimbingWorkoutAnalyzer/src/graphs/' + self.path)
         plt.close(self.fig)
+    
 
 class LoadTrendGraph(BaseGraph):
     # Goal: Track how over/underloaded I am 
@@ -84,7 +86,8 @@ class WeeklyConsistencyGraph(BaseGraph):
             # y axis = number of workouts (red for missed, green for completed)
         # title = "Weekly Consistency"
         # legend = "Completed Workouts" and "Missed Workouts"
-    
+    def plot_graph(self):
+        self.ax.
     # data needed:
         # week numbers
         # (for each week):
@@ -97,7 +100,10 @@ class LoadCycleSummaryGraph(BaseGraph):
         # lines: 1 for the load cycle values, one circle around the current load cycle value
             # x axis = date
             # y axis = load cycle value
-        
+    def plot_graph(self):
+        self.ax.plot(self.data['Date'],self.data['Load Cycle'])
+
+        self.finalize_graph('Load Cycle Summary', 'Date', 'Load Block')
     # data needed:
         # day (current and every 3 days)
         # load cycle values (from the training plan) for each date (every 3 days)

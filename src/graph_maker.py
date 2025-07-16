@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from src.graph_classes import LoadTrendGraph, MaxProgressionGraph, RPEvsTargetGraph, WeeklyConsistencyGraph, LoadCycleSummaryGraph
 
 # Pipeline: Use dataframe -> create new dataframes with data needed for each graph -> create graphs with the new dataframes
 
@@ -13,12 +14,6 @@ def graph_maker(df, date, wb, benchmark_df):
     graphs = create_graphs(graph_data, graph_paths, date)
     
     plot_graphs(graphs)
-
-    save_graphs(graph_paths,'/Users/cole/Desktop/ClimbingWorkoutAnalyzer/src/graphs')
-
-# TODO: Save graphs to specified output path
-def save_graphs(graph_paths, output_path):
-    pass
 
 # Instantiate graph objects and call their methods to plot and save graphs
 def create_graphs(graph_data,graph_paths,date):
@@ -111,7 +106,7 @@ def max_progression_data(df, date, wb, benchmark_df):
                 workout_name = df[df['Day'] == current_day - i]['Workout ' + str(j)].iloc[0]
                 weight = df[df['Day'] == current_day - i]['Weight ' + str(j)].iloc[0]
                 reps = df[df['Day'] == current_day - i]['Reps ' + str(j)].iloc[0]
-            except (IndexError, KeyError):# Handle the case where the day or workout does not exist
+            except (IndexError, KeyError):# handle the case where the day or workout does not exist
                 print(f"Data for Day {current_day - i} or Workout {j} is missing.")
                 continue
             # apply formula to each exercise for most recent workout
@@ -171,9 +166,9 @@ def get_weekly_consistency_data(df, date):
     return g4_data
     
 def get_load_cycle_summary_data(df, date):
-    current_load_cycle = df[df['Date'] == date]['Load Cycle'].iloc[0]
-    # you only need one data point because the graph is static
-    return current_load_cycle
+    # I will get the specific day to show on the graph inside the graph class, i just need the two columns
+    load_cycle_data = df[['Date', 'Load_Cycle']]
+    return load_cycle_data
 
 def get_current_type(df, date):
     return df[df['Date'] == date]['Type'].iloc[0]
