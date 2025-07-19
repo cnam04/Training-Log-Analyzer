@@ -1,18 +1,95 @@
-## Getting Started
+ # 🧗‍♂️ Climbing Workout Analyzer
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+> *Track, analyze, and visualize your climbing training data with customizable graphs and automated PDF reports.*
 
-## Folder Structure
+## 🌟 Highlights
 
-The workspace contains two folders by default, where:
+- 📊 Automatically generates visual performance reports from Excel training logs
+- 🧠 Built with object-oriented Python, leveraging pandas and matplotlib
+- 📁 Outputs polished PDF reports using Pillow and `fpdf`
+- 💡 Designed for climbers seeking insight into their training progress
+- 🔁 Modular architecture allows for easy extension and additional graphs
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## ℹ️ Overview
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+**Climbing Workout Analyzer** is a Python-based tool for analyzing and visualizing structured climbing training data. It automates the creation of customized performance graphs and compiles them into professional PDF reports — no manual charting required.
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+This project was built to automate the entry, planning, and analysis of my personal climbing accessory workout data.
 
-## Dependency Management
+It was developed as a personal project to build skills in data analysis, object-oriented programming, and automated reporting.
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+### ✍️ Author
+
+I'm Cole Nam, a computer science student and climber. I created this project to combine my passion for training with my growing skills in data science and Python development.
+
+My goal is to improve my technical portfolio while creating a tool I actually use to track and improve my own climbing performance.
+
+## 🚀 Usage Instructions
+
+> The project is still in development, but here’s what it will look like to use:
+
+```bash
+python generate_report.py --date 2025-07-01
+```
+
+- Automatically parses your climbing log spreadsheet
+- Allows for data entry through the CL
+- Gives recommendations for workout weights, sets, reps, RPE based on the the current phase of my training
+- Cleans and processes workout data using pandas
+- Generates multiple matplotlib graphs using class-based design
+- Formats and compiles graphs into a downloadable PDF report
+
+## ⬇️ Installation Instructions
+
+1. Clone the repo:
+
+```bash
+git clone https://github.com/cnam04/climbing-workout-analyzer.git
+cd climbing-workout-analyzer
+```
+
+2. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Dependencies include:
+- `pandas`
+- `matplotlib`
+- `fpdf`
+- `Pillow`
+- `openpyxl`
+
+## 🖼️ Example Output
+
+> *Coming soon: screenshots and sample PDF reports*
+
+## 📁 Project Structure
+
+```
+climbing-workout-analyzer/
+├── README.md
+├── .gitignore
+├── main.py
+└── src/
+    ├── graphs/
+    ├── reports/
+    ├── date_tool.py
+    ├── graph_classes.py
+    ├── graph_maker.py
+    ├── input_module.py
+    ├── Training_day.py
+    ├── workout_logic.py
+    └── Workout.py
+```
+
+## 💭 Contributing / Feedback
+
+This project is primarily personal, as it is designed around the format of my person spreadsheet. However I am a beginner so any feedback or contributions are always welcome! I am trying my best to learn how to program conventionally. If you have something to add, you can do the following:
+
+- Open an issue
+- Fork the repo
+- Submit a pull request
+- Or just drop me a message on GitHub!
+
