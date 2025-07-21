@@ -86,10 +86,7 @@ climbing-workout-analyzer/
 
 ## 💭 Contributing / Feedback
 
-This project is primarily personal, as it is designed around the format of my person spreadsheet. However I am a beginner so any feedback or contributions are always welcome! I am trying my best to learn how to program conventionally. If you have something to add, you can do the following:
+This project is primarily personal, as it is designed around the format of my personal spreadsheet. I am a beginner so any feedback or contributions are always welcome! I am trying my best to learn how to program conventionally. If you have something to add, just drop me a message on GitHub!
 
-- Open an issue
-- Fork the repo
-- Submit a pull request
-- Or just drop me a message on GitHub!
+
 
