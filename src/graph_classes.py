@@ -64,12 +64,35 @@ class MaxProgressionGraph(BaseGraph):
 class RPEvsTargetGraph(BaseGraph):
     # Goal: Track how my actual RPE compares to my target RPE
         # timeframe = all time
-        # dumbell dot plot, with lines connecting the actual RPE to the target RPE
+        # 3 figures, 1 for each workout. Each has a line for expected rpe and actual, area will be shaded in blue if actual RPE is higher, and yellow if expected RPE is higher
             # x axis = day
             # y axis = RPE
                 # major ticks = 1 RPe
                 # minor ticks = 0.5 RPE
         # title = "Actual vs Target RPE"
+    def plot_graph(self):
+        # Override original declaration since there's 3 subplots
+        self.fig, self.ax = plt.subplots(3, sharex=True) 
+        for i in range(3):
+            expected = self.data[f'Expected RPE W{i+1}']
+            actual = self.data[f'Actual RPE W1{i+1}']
+            days = self.data['Day']
+            self.ax[i].plot(days, expected, color='Blue')
+            self.ax[i].plot(days, actual, color='Orange')
+            # shade area to highlight deviance from expected
+            self.ax[i].fill_between(days, expected, actual,
+                                    where=(expected > actual),color='Blue')
+            self.ax[i].fill_between(days, expected, actual,
+                                    where=(expected < actual), color='Orange')
+            self.ax[i].set_title(f'Workout {i+1}')
+        
+        possible_titles = {
+            'Weighted Pull Up' : 'Pulling Accesory Workouts',
+            'Incline Bench' : 'Pushing Accessory Workouts',
+            'Barbell Squat' : 'Leg Accessory Workouts'
+        }
+        workout_type = possible_titles[self.data['Workout 1'].iloc[0]]
+        self.finalize_graph('Actual vs Target RPE for ' + workout_type, 'Day', 'RPE')
 
     # data needed:
         # day (current and every 3 days)
@@ -87,7 +110,13 @@ class WeeklyConsistencyGraph(BaseGraph):
         # title = "Weekly Consistency"
         # legend = "Completed Workouts" and "Missed Workouts"
     def plot_graph(self):
-        self.ax.
+        bar_width, x_locations = .4, np.arange(self.data['Week'])
+        self.ax.bar(x_locations - bar_width/2, self.data['completed_workouts'], width=bar_width/3,color='Green',label='Completed')
+        self.ax.bar(x_locations - bar_width/6, self.data['partially_completed_workouts'], width=bar_width/3,color='Yellow',label='Partially Completed')
+        self.ax.bar(x_locations + bar_width/6, self.data['missed_workouts'], width=bar_width/3,color='Red',label='Missed')
+        self.ax.legend()
+        
+        self.finalize_graph('Weekly Consistency', 'Week', 'Number of Workouts')
     # data needed:
         # week numbers
         # (for each week):
