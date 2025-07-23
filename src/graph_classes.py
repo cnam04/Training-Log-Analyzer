@@ -86,6 +86,7 @@ class RPEvsTargetGraph(BaseGraph):
                                     where=(expected < actual), color='Orange')
             self.ax[i].set_title(f'Workout {i+1}')
         
+        # Make title less generic
         possible_titles = {
             'Weighted Pull Up' : 'Pulling Accesory Workouts',
             'Incline Bench' : 'Pushing Accessory Workouts',

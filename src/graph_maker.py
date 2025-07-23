@@ -94,23 +94,26 @@ def max_progression_data(df, date, wb, benchmark_df):
     # find previous benchmark 1RMs for each exercise
     g2_data = benchmark_df[['Workout','Estimated 1RM']]
     g2_data = g2_data.rename(columns={'Estimated 1RM': 'Previous 1RM'})
-    # find current 1RMs for each exercise using estimated 1RM formula
     current_day = df[df['Date'] == date]['Day'].iloc[0]
-    # 1RM = Weight / (1.0278 - (0.0278 * Repetitions))
     current_1RMs = {}
-    for i in range(0, 3): #iterate through current -> prev 2 days
-        # collect the data in an array of touples
-        for j in range (1, 4):
-            try:
-                # get the workout name, weight, and reps for each exercise
-                workout_name = df[df['Day'] == current_day - i]['Workout ' + str(j)].iloc[0]
-                weight = df[df['Day'] == current_day - i]['Weight ' + str(j)].iloc[0]
-                reps = df[df['Day'] == current_day - i]['Reps ' + str(j)].iloc[0]
-            except (IndexError, KeyError):# handle the case where the day or workout does not exist
-                print(f"Data for Day {current_day - i} or Workout {j} is missing.")
-                continue
-            # apply formula to each exercise for most recent workout
-            current_1RM = weight / (1.0278 - (0.0278 * reps))
+
+    # make sure we are deriving 1rms from completed workouts
+    completed_df = df[df['Day'] <= current_day].sort_values('Day', ascending=False)
+    mask = (
+        ((completed_df['Sets W1'] > 0) & (completed_df['Reps W1'] > 0) & (completed_df['Weight W1'] > 0)) &
+        ((completed_df['Sets W2'] > 0) & (completed_df['Reps W2'] > 0) & (completed_df['Weight W2'] > 0)) &
+        ((completed_df['Sets W3'] > 0) & (completed_df['Reps W3'] > 0) & (completed_df['Weight W3'] > 0))
+    )
+    completed_df = completed_df[mask]
+    # 
+    for day in completed_df['Day'].head(3):   
+        # get the workout name, weight, and reps for each exercise
+        row= completed_df[completed_df['Day'] == day].iloc[0]
+        for i in range(1,4):    
+            workout_name = row[f'Workout {i}']
+            weight = row[f'Weighjt {i}']
+            reps = row[f'Reps {i}']
+            current_1RM = weight / (1.0278 - (0.0278 * reps)) # apply formula
             # add to dict
             current_1RMs[workout_name] = current_1RM
     # add a new column to g2_data with the current 1RMs
