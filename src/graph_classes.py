@@ -47,20 +47,38 @@ class LoadTrendGraph(BaseGraph):
 
 class MaxProgressionGraph(BaseGraph):
     # Goal: Track how my 1RM is progressing for all 9 exercises
-        # use the 1RM formula to calculate the 1RM for each exercise for each date
-        # timeframe = all time
-        # lines: 2 for each exercise, one for benchmark 1RM, one for calculated 1RM
-            # x axis = date
-                # major ticks = every day
-            # y axis = 1RM
-                # major ticks = every 5 lbs
-        # in the legend, include date of 1RM benchmark
+        # timeframe = current vs benchmark date
+        # dumbbell dot plot connecting index of 1 to improvement index
+            # x-axis: workout names (9)
+            # y- axis: improvmeent indices
+        # it would be nice to show original and new weights inside the plots
+        # in the legend, include date of 1RM benchmark and explanation of the index
         # title = "1RM progression"
+    def plot_graph(self):
+        workouts = self.data['Workout'].tolist()
+        self.ax.set_xticklabels(workouts)
+        self.ax.set_ybound(.8, 1.4)
+        self.ax.set_yticklabels(np.arange(.8,1.4,.05))
+        
+        # for each workout, plot the base point and improvement index and connect them
+        for workout in workouts:
+            # plot base point and new improvement index
+            self.ax.scatter(self.data['Workout'], 1)
+            self.ax.scatter(self.data['Workout'], self.data['Improvement Index'])
+            
+            # connect the points with a line between them
+            self.ax.plot((self.data['Workout'], self.data['Workout']),(1, self.data['Improvement Index']))
 
+            # put the base weight in the first point, and the new weight in the second point
+            self.ax.text(self.data['Workout'], 1, str(self.data['Previous 1RM']))
+            self.ax.text(self.data['Workout'], 1, str(self.data['Current 1RM']))
+
+        
+        self.finalize_graph('1RM progression', 'Workouts', 'Improvement Index')
     #data needed:
-        # days 
         # (for all nine exercises):
             # 1RM (calculated from the actual workout data) for each date
+            # prev 1RM
 class RPEvsTargetGraph(BaseGraph):
     # Goal: Track how my actual RPE compares to my target RPE
         # timeframe = all time

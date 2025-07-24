@@ -102,10 +102,11 @@ def max_progression_data(df, date, wb, benchmark_df):
     mask = (
         ((completed_df['Sets W1'] > 0) & (completed_df['Reps W1'] > 0) & (completed_df['Weight W1'] > 0)) &
         ((completed_df['Sets W2'] > 0) & (completed_df['Reps W2'] > 0) & (completed_df['Weight W2'] > 0)) &
-        ((completed_df['Sets W3'] > 0) & (completed_df['Reps W3'] > 0) & (completed_df['Weight W3'] > 0))
+        ((completed_df['Sets W3'] > 0) & (completed_df['Reps W3'] > 0) & (completed_df['Weight W3'] > 0)) &
+        ((completed_df['Load Cycle'] < 4)) # dont pull from deload weeks
     )
     completed_df = completed_df[mask]
-    # 
+
     for day in completed_df['Day'].head(3):   
         # get the workout name, weight, and reps for each exercise
         row= completed_df[completed_df['Day'] == day].iloc[0]
@@ -118,7 +119,8 @@ def max_progression_data(df, date, wb, benchmark_df):
             current_1RMs[workout_name] = current_1RM
     # add a new column to g2_data with the current 1RMs
     g2_data['Current 1RM'] = g2_data['Workout'].map(current_1RMs)
-
+    
+    g2_data['Improvement Index'] = g2_data['Current 1RM'] / g2_data['Previous 1RM']
     return g2_data
 
 def actual_RPE_vs_target_data(df, date, wb):
