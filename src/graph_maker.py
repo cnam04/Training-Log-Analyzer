@@ -36,7 +36,6 @@ def plot_graphs(graphs):
     for graph in graphs:
         graph.plot_graph()
 
-# TODO: Transform base dataframe into data needed for each graph
 def prepare_graph_data(df, date, wb, benchmark_df):
     #add logic to prepare data for each graph
     g1 = load_trend_data(df, date, wb)
@@ -84,7 +83,7 @@ def load_trend_data(df, date, wb, benchmark_df):
     g1_data['Workout 2 Expected Load'] = g1_data['Load Cycle'].map(load_cycle_values)
     g1_data['Workout 3 Expected Load'] = g1_data['Load Cycle'].map(load_cycle_values)
     
-    g1_data = g1_data[['Day', 'Workout 1 Actual Load', 'Workout 2 Actual Load', 'Workout 3 Actual Load', 'Workout 1 Expected Load', 'Workout 2 Expected Load', 'Workout 3 Expected Load']]
+    g1_data = g1_data[['Day', 'Workout 1', 'Workout 1 Actual Load', 'Workout 2', 'Workout 2 Actual Load', 'Workout 3', 'Workout 3 Actual Load', 'Workout 1 Expected Load', 'Workout 2 Expected Load', 'Workout 3 Expected Load']]
 
     return g1_data
     
@@ -172,8 +171,8 @@ def get_weekly_consistency_data(df, date):
     
 def get_load_cycle_summary_data(df, date):
     # I will get the specific day to show on the graph inside the graph class, i just need the two columns
-    load_cycle_data = df[['Date', 'Load_Cycle']]
-    return load_cycle_data
+    g5_data = df[['Date', 'Load_Cycle']]
+    return g5_data
 
 def get_current_type(df, date):
     return df[df['Date'] == date]['Type'].iloc[0]

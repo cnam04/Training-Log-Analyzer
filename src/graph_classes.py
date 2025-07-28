@@ -25,7 +25,31 @@ class BaseGraph(ABC):
     
 
 class LoadTrendGraph(BaseGraph):
-    # Goal: Track how over/underloaded I am 
+    # Override finalize_graph since there's 3 subplots
+    def finalize_graph(self, title, xlabel, ylabel):
+            self.ax.suptitle(title)
+            self.ax[-1].set_xlabel(xlabel)
+            self.ax.supylabel(ylabel)
+            self.fig.savefig('/Users/cole/Desktop/ClimbingWorkoutAnalyzer/src/graphs/' + self.path)
+            plt.close(self.fig)
+
+    def plot_graph(self):
+        # Override original declaration since there's 3 subplots (one for each workout)
+        self.fig, self.ax = plt.subplots(3, sharex=True) 
+        
+        for i in range(3):
+            self.ax[i].plot(self.data['Day'], self.data[f'Workout {i+1} Actual Load'], color='Orange', label='Actual Load')
+            self.ax[i].plot(self.data['Day'], self.data[f'Workout {i+1} Expected Load'], color='Blue', label='Expected Load')
+            self.ax[i].fill_between(self.data['Day'], self.data[f'Workout {i+1} Actual Load'],self.data[f'Workout {i+1} Expected Load'], color='Red', alpha=0.3)
+            self.ax[i].set_title(self.data[f'Workout {i+1}'].iloc[0])
+        
+        self.finalize_graph('Actual vs Expected Workout Load', 'Day', 'Workout Load')
+    # data needed: 
+        # day (current and every 3 days)
+        # (for all three workouts on that type):
+            # load (actual)
+            # expected load (from training plan)
+        # Goal: Track how over/underloaded I am 
         # This graph will plot the load vs expected load
             # load = sets * reps * %1RM 
             # expected load = load determined by the training plan
@@ -38,13 +62,7 @@ class LoadTrendGraph(BaseGraph):
             # y axis = load
             # legend = each workout actual & expected will have its own line, so the legend will contain the names of each workout
             # title = "Actual vs Expected Load" 
-
-    # data needed: 
-        # day (current and every 3 days)
-        # (for all three workouts on that type):
-            # load (actual)
-            # expected load (from training plan)
-
+            # shade the area between the actual and expected load lines
 class MaxProgressionGraph(BaseGraph):
     # Goal: Track how my 1RM is progressing for all 9 exercises
         # timeframe = current vs benchmark date
@@ -75,10 +93,6 @@ class MaxProgressionGraph(BaseGraph):
 
         
         self.finalize_graph('1RM progression', 'Workouts', 'Improvement Index')
-    #data needed:
-        # (for all nine exercises):
-            # 1RM (calculated from the actual workout data) for each date
-            # prev 1RM
 class RPEvsTargetGraph(BaseGraph):
     # Goal: Track how my actual RPE compares to my target RPE
         # timeframe = all time
@@ -88,7 +102,15 @@ class RPEvsTargetGraph(BaseGraph):
                 # major ticks = 1 RPe
                 # minor ticks = 0.5 RPE
         # title = "Actual vs Target RPE"
-    def plot_graph(self):
+        # Override finalize_graph since there's 3 subplots
+    def finalize_graph(self, title, xlabel, ylabel):
+            self.ax.suptitle(title)
+            self.ax[-1].set_xlabel(xlabel)
+            self.ax.supylabel(ylabel)
+            self.fig.savefig('/Users/cole/Desktop/ClimbingWorkoutAnalyzer/src/graphs/' + self.path)
+            plt.close(self.fig)
+            
+    def plot_graph(self):   
         # Override original declaration since there's 3 subplots
         self.fig, self.ax = plt.subplots(3, sharex=True) 
         for i in range(3):
